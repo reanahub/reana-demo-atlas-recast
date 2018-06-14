@@ -1,0 +1,15 @@
+version: 0.2.0
+inputs:
+ parameters:
+  did: 404958
+  xsec_in_pb: 0.00122
+  dxaod_file: root://eosuser.cern.ch///eos/project/r/recast/atlas/inputs/rpvrpc/mc15_13TeV.404958.MGPy8EG_A14NNPDF23LO_GG_rpvHF_2400_200.merge.DAOD_SUSY10.e6334_a766_a821_r7676_p2666/DAOD_SUSY10.12528153._000001.pool.root.1
+outputs:
+  files:
+   - statanalysis
+environments:
+ - type: docker
+   image: reanahub/reana-demo-bsm-search
+workflow:
+  type: yadage
+  file: workflow/databkgmc.yml

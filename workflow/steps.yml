@@ -1,0 +1,49 @@
+eventselection:
+  process:
+    process_type: interpolated-script-cmd
+    interpreter: bash
+    script: |
+      source /home/atlas/release_setup.sh
+      source /analysis/build/x86*/setup.sh
+      /recast_auth/getkrb.sh
+
+      cat << 'EOF' > recast_xsecs.txt
+      id/I:name/C:xsec/F:kfac/F:eff/F:relunc/F
+      {did} {name} {xsec_in_pb} 1.0 1.0 1.0
+      EOF
+
+      echo {dxaod_file} > recast_inputs.txt
+      myEventSelection {submitDir} recast_inputs.txt recast_xsecs.txt {lumi_in_ifb}
+  publisher:
+    publisher_type: interpolated-pub
+    publish:
+      histfile: '{submitDir}/hist-sample.root'
+  environment:
+    environment_type: 'docker-encapsulated'
+    image: gitlab-registry.cern.ch/atlas_exotexample_preserved/eventselection
+    resources:
+    - GRIDProxy
+
+statanalysis:
+  process:
+    process_type: interpolated-script-cmd
+    interpreter: bash
+    script: |
+      source /home/atlas/release_setup.sh
+      python /code/make_ws.py {data_file} {signal_file} {background_file}
+      mkdir -p {resultdir}
+      python /code/plot.py results/meas_combined_meas_model.root {resultdir}/pre.png {resultdir}/post.png
+      python /code/set_limit.py results/meas_combined_meas_model.root \
+            {resultdir}/limit.png {resultdir}/limit_data.json \
+            {resultdir}/limit_data_nomsignal.json
+  publisher:
+    publisher_type: interpolated-pub
+    publish:
+      pre:    '{resultdir}/pre.png'
+      post:   '{resultdir}/post.png'
+      limit:  '{resultdir}/limit_data.json'
+      nomsig: '{resultdir}/limit_data_nomsignal.json'
+  environment:
+    environment_type: 'docker-encapsulated'
+    image: gitlab-registry.cern.ch/atlas_exotexample_preserved/statanalysis
+
