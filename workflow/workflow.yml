@@ -21,4 +21,3 @@ stages:
         background_file: /code/data/background.root
         resultdir: '{workdir}/fitresults'
       step: {$ref: 'steps.yml#/statanalysis'}
-

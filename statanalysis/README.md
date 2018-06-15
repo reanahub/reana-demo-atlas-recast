@@ -1,6 +1,6 @@
 # Statistical Analysis for an ATLAS analysis
 
-This is a simple repository for statistical analysis for outputs produced by the event selection package. 
+This is a simple repository for statistical analysis for outputs produced by the event selection package.
 
 Notes:
 

@@ -1,5 +1,5 @@
-GitLab CI Tests
+Event Selection
 ===============
 
-This project serves for R&D with the GitLab CI system and the
-Docker images built from the ATLAS analysis releases.
+This is the Event selection part of the analysis. It uses the official
+analysis releases prepared by the ATLAS Analysis Software Group (ASG).

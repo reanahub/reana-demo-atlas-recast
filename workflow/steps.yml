@@ -5,7 +5,6 @@ eventselection:
     script: |
       source /home/atlas/release_setup.sh
       source /analysis/build/x86*/setup.sh
-      /recast_auth/getkrb.sh
 
       cat << 'EOF' > recast_xsecs.txt
       id/I:name/C:xsec/F:kfac/F:eff/F:relunc/F
@@ -20,9 +19,7 @@ eventselection:
       histfile: '{submitDir}/hist-sample.root'
   environment:
     environment_type: 'docker-encapsulated'
-    image: gitlab-registry.cern.ch/atlas_exotexample_preserved/eventselection
-    resources:
-    - GRIDProxy
+    image: reanahub/reana-demo-atlas-recast-eventselection
 
 statanalysis:
   process:
@@ -34,8 +31,8 @@ statanalysis:
       mkdir -p {resultdir}
       python /code/plot.py results/meas_combined_meas_model.root {resultdir}/pre.png {resultdir}/post.png
       python /code/set_limit.py results/meas_combined_meas_model.root \
-            {resultdir}/limit.png {resultdir}/limit_data.json \
-            {resultdir}/limit_data_nomsignal.json
+             {resultdir}/limit.png {resultdir}/limit_data.json \
+             {resultdir}/limit_data_nomsignal.json
   publisher:
     publisher_type: interpolated-pub
     publish:
@@ -45,5 +42,4 @@ statanalysis:
       nomsig: '{resultdir}/limit_data_nomsignal.json'
   environment:
     environment_type: 'docker-encapsulated'
-    image: gitlab-registry.cern.ch/atlas_exotexample_preserved/statanalysis
-
+    image: reanahub/reana-demo-atlas-recast-statanalysis
