@@ -1,0 +1,6 @@
+build_image:
+  tags:
+    - docker-image-build
+  script:
+    - ignore
+
