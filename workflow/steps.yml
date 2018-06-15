@@ -27,6 +27,7 @@ statanalysis:
     interpreter: bash
     script: |
       source /home/atlas/release_setup.sh
+
       python /code/make_ws.py {data_file} {signal_file} {background_file}
       mkdir -p {resultdir}
       python /code/plot.py results/meas_combined_meas_model.root {resultdir}/pre.png {resultdir}/post.png
