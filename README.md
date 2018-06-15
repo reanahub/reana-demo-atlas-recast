@@ -16,7 +16,6 @@ Notes:
 * The `make_ws.py` script generates a HistFactory configuration based on signal,data and background ROOT files
 * It performs a simgple HistFactory-based fit based on a single channel (consisting of two bins).
 
-```
 
 ## Usage
 
