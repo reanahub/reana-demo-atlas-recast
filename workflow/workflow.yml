@@ -10,7 +10,7 @@ stages:
         dxaod_file: {stages: init, output: dxaod_file, unwrap: true}
         lumi_in_ifb: 30.0
         submitDir: '{workdir}/submitDir'
-      step: {$ref: 'steps.yml#/eventselection'}
+      step: {$ref: 'workflow/steps.yml#/eventselection'}
   - name: statanalysis
     dependencies: [eventselection]
     scheduler:
@@ -20,4 +20,4 @@ stages:
         signal_file: {stages: eventselection, output: histfile, unwrap: true}
         background_file: /code/data/background.root
         resultdir: '{workdir}/fitresults'
-      step: {$ref: 'steps.yml#/statanalysis'}
+      step: {$ref: 'workflow/steps.yml#/statanalysis'}
