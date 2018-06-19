@@ -1,0 +1,21 @@
+notifications:
+  email: false
+
+sudo: true
+
+language: python
+
+cache:
+  - pip
+
+python:
+  - 2.7
+
+services:
+  - docker
+
+before_install:
+  - travis_retry pip install reana-client
+
+script:
+  - reana-client analyses validate | grep -q ' is a valid '
