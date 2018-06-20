@@ -292,21 +292,27 @@ its status:
 .. code-block:: console
 
     $ reana-client workflow status
-    **FIXME**
+    NAME       RUN_NUMBER   CREATED               STATUS     PROGRESS
+    workflow   1            2018-06-20T18:29:36   finished   2/2
 
 We can list the output files:
 
 .. code-block:: console
 
-    $ reana-client outputs list | head -3
-    **FIXME**
+    $ reana-client outputs list | grep -E '(NAME|fitresults)'
+    NAME                                                SIZE    LAST-MODIFIED
+    statanalysis/fitresults/pre.png                     10142   2018-06-20 18:31:17.435274+00:00
+    statanalysis/fitresults/post.png                    10120   2018-06-20 18:31:17.435274+00:00
+    statanalysis/fitresults/limit.png                   17053   2018-06-20 18:31:17.435274+00:00
+    statanalysis/fitresults/limit_data.json             174     2018-06-20 18:31:17.435274+00:00
+    statanalysis/fitresults/limit_data_nomsignal.json   176     2018-06-20 18:31:17.435274+00:00
 
-We finish by downloading generated plots:
+We finish by downloading generated limit plot:
 
 .. code-block:: console
 
-    $ reana-client outputs download plot/postfit.pdf
-    **FIXME**
+    $ reana-client outputs download statanalysis/fitresults/limit.png
+    File statanalysis/fitresults/limit.png downloaded to ./outputs/
 
 Contributors
 ============
