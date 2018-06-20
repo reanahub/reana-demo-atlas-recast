@@ -33,9 +33,9 @@ cloud and run the analysis to obtain (5) output results.
 
 The analysis takes the following inputs:
 
-+- ``dxaod`` input ROOT file
-+- ``did`` dataset ID e.g. 404958
-+- ``xsec_in_pb`` cross section in picobarn e.g. 0.00122
+- ``dxaod`` input ROOT file
+- ``did`` dataset ID e.g. 404958
+- ``xsec_in_pb`` cross section in picobarn e.g. 0.00122
 
 2. Analysis code
 ----------------
