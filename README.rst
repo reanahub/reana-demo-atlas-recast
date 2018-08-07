@@ -250,11 +250,13 @@ We proceed by installing the REANA command-line client:
     $ pip install reana-client
 
 We should now connect the client to the remote REANA cloud where the analysis
-will run. We do this by setting the ``REANA_SERVER_URL`` environment variable:
+will run. We do this by setting the ``REANA_SERVER_URL`` environment variable
+and ``REANA_ACCESS_TOKEN`` with a valid access token:
 
 .. code-block:: console
 
     $ export REANA_SERVER_URL=https://reana.cern.ch/
+    $ export REANA_ACCESS_TOKEN=<ACCESS_TOKEN>
 
 Note that if you `run REANA cluster locally
 <http://reana-cluster.readthedocs.io/en/latest/gettingstarted.html#deploy-reana-cluster-locally>`_
@@ -262,20 +264,20 @@ on your laptop, you would do:
 
 .. code-block:: console
 
-    $ eval $(reana-cluster env)
+    $ eval $(reana-cluster env --all)
 
 Let us test the client-to-server connection:
 
 .. code-block:: console
 
     $ reana-client ping
-    Server is running.
+    Connected to https://reana.cern.ch - Server is running.
 
 We proceed to create a new workflow instance:
 
 .. code-block:: console
 
-    $ reana-client workflow create
+    $ reana-client create
     workflow.1
     $ export REANA_WORKON=workflow.1
 
@@ -283,7 +285,7 @@ We can now start the workflow execution:
 
 .. code-block:: console
 
-    $ reana-client workflow start
+    $ reana-client start
     workflow.1 has been started.
 
 After several minutes the workflow should be successfully finished. Let us query
@@ -291,33 +293,34 @@ its status:
 
 .. code-block:: console
 
-    $ reana-client workflow status
+    $ reana-client status
     NAME       RUN_NUMBER   CREATED               STATUS     PROGRESS
-    workflow   1            2018-06-20T18:29:36   finished   2/2
+    workflow   1            2018-08-07T07:33:18   finished   2/2
 
 We can list the output files:
 
 .. code-block:: console
 
-    $ reana-client outputs list | grep -E '(NAME|fitresults)'
+    $ reana-client list | grep -E '(NAME|fitresults)'
     NAME                                                SIZE    LAST-MODIFIED
-    statanalysis/fitresults/pre.png                     10142   2018-06-20 18:31:17.435274+00:00
-    statanalysis/fitresults/post.png                    10120   2018-06-20 18:31:17.435274+00:00
-    statanalysis/fitresults/limit.png                   17053   2018-06-20 18:31:17.435274+00:00
-    statanalysis/fitresults/limit_data.json             174     2018-06-20 18:31:17.435274+00:00
-    statanalysis/fitresults/limit_data_nomsignal.json   176     2018-06-20 18:31:17.435274+00:00
+    statanalysis/fitresults/limit_data_nomsignal.json   176     2018-08-07 07:35:24.026320+00:00
+    statanalysis/fitresults/limit_data.json             174     2018-08-07 07:35:23.853874+00:00
+    statanalysis/fitresults/limit.png                   17053   2018-08-07 07:35:23.846938+00:00
+    statanalysis/fitresults/post.png                    10120   2018-08-07 07:35:21.914145+00:00
+    statanalysis/fitresults/pre.png                     10142   2018-08-07 07:35:21.749101+00:00
 
 We finish by downloading generated limit plot:
 
 .. code-block:: console
 
-    $ reana-client outputs download statanalysis/fitresults/limit.png
-    File statanalysis/fitresults/limit.png downloaded to ./outputs/
+    $ reana-client download statanalysis/fitresults/limit.png
+    File statanalysis/fitresults/limit.png downloaded to /home/reana/reanahub/reana-demo-atlas-recast.
 
 Contributors
 ============
 
 The list of contributors in alphabetical order:
 
+- `Diego Rodriguez <https://orcid.org/0000-0003-0649-2002>`_ <diego.rodriguez@cern.ch>
 - `Lukas Heinrich <https://orcid.org/0000-0002-4048-7584>`_ <lukas.heinrich@gmail.com>
 - `Tibor Simko <https://orcid.org/0000-0001-7202-5803>`_ <tibor.simko@cern.ch>
