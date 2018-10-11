@@ -1,3 +1,17 @@
+# Note that if you are working on the analysis development locally, i.e. outside
+# of the REANA platform, you can proceed as follows:
+#
+#   $ mkvirtualenv yadage
+#   $ pip install yadage==0.19
+#   $ export PACKTIVITY_DOCKER_CMD_MOD="-u root"
+#   $ yadage-run _run workflow/workflow.yml ./workflow/test_inputs/inp1.yml
+#   $ ls -l _run/statanalysis/fitresults/*.png
+#   -rw-r--r-- 1 root root 17053 Jun 17 15:16 _run/statanalysis/fitresults/limit.png
+#   -rw-r--r-- 1 root root 10120 Jun 17 15:16 _run/statanalysis/fitresults/post.png
+#   -rw-r--r-- 1 root root 10142 Jun 17 15:16 _run/statanalysis/fitresults/pre.png
+#   $ ls -l _run/statanalysis/fitresults/limit_data.json
+#   -rw-r--r-- 1 root root 174 Jun 17 15:16 _run/statanalysis/fitresults/limit_data.json
+
 stages:
   - name: eventselection
     dependencies: [init]

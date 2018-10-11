@@ -188,139 +188,66 @@ The limit plot:
 The limit data is also stored in JSON format for both an entire µ-scan as well
 as for µ=1.
 
-Local testing
-=============
-
-*Optional*
-
-If you would like to test the analysis locally (i.e. outside of the REANA
-platform), you can proceed as follows:
-
-.. code-block:: console
-
-   $ # this analysis example uses yadage; let's install it
-   $ mkvirtualenv yadage
-   $ pip install yadage==0.13.5 yadage-schemas==0.7.16 packtivity==0.10.0
-   $ # we can now run the analysis workflow
-   $ export PACKTIVITY_DOCKER_CMD_MOD="-u root"
-   $ yadage-run _run workflow/workflow.yml ./workflow/test_inputs/inp1.yml
-   $ # let us check output files
-   $ ls -l _run/statanalysis/fitresults/*.png
-   -rw-r--r-- 1 root root 17053 Jun 17 15:16 _run/statanalysis/fitresults/limit.png
-   -rw-r--r-- 1 root root 10120 Jun 17 15:16 _run/statanalysis/fitresults/post.png
-   -rw-r--r-- 1 root root 10142 Jun 17 15:16 _run/statanalysis/fitresults/pre.png
-   $ ls -l _run/statanalysis/fitresults/limit_data.json
-   -rw-r--r-- 1 root root 174 Jun 17 15:16 _run/statanalysis/fitresults/limit_data.json
-
 Running the example on REANA cloud
 ==================================
 
-First we need to create a `reana.yaml <reana.yaml>`_ file describing the
-structure of our analysis with its inputs, the code, the runtime environment,
-the workflow and the expected outputs:
+We start by creating a `reana.yaml <reana.yaml>`_ file describing the above
+analysis structure with its inputs, code, runtime environment, computational
+workflow steps and expected outputs:
 
 .. code-block:: yaml
 
-    version: 0.2.0
+    version: 0.3.0
     inputs:
       parameters:
         did: 404958
         xsec_in_pb: 0.00122
         dxaod_file: http://physics.nyu.edu/~lh1132/capdemo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
+    workflow:
+      type: yadage
+      file: workflow/workflow.yml
     outputs:
       files:
         - outputs/statanalysis/fitresults/pre.png
         - outputs/statanalysis/fitresults/post.png
         - outputs/statanalysis/fitresults/limit.png
         - outputs/statanalysis/fitresults/limit_data.json
-    environments:
-      - type: docker
-        image: reanahub/reana-demo-atlas-recast-eventselection
-      - type: docker
-        image: reanahub/reana-demo-atlas-recast-statanalysis
-    workflow:
-      type: yadage
-      file: workflow/workflow.yml
 
-We proceed by installing the REANA command-line client:
+We can now install the REANA command-line client, run the analysis and download
+the resulting plots:
 
 .. code-block:: console
 
+    $ # install REANA client
     $ mkvirtualenv reana-client
     $ pip install reana-client
-
-We should now connect the client to the remote REANA cloud where the analysis
-will run. We do this by setting the ``REANA_SERVER_URL`` environment variable
-and ``REANA_ACCESS_TOKEN`` with a valid access token:
-
-.. code-block:: console
-
+    $ # connect to some REANA cloud instance
     $ export REANA_SERVER_URL=https://reana.cern.ch/
-    $ export REANA_ACCESS_TOKEN=<ACCESS_TOKEN>
-
-Note that if you `run REANA cluster locally
-<http://reana-cluster.readthedocs.io/en/latest/gettingstarted.html#deploy-reana-cluster-locally>`_
-on your laptop, you would do:
-
-.. code-block:: console
-
-    $ eval $(reana-cluster env --all)
-
-Let us test the client-to-server connection:
-
-.. code-block:: console
-
-    $ reana-client ping
-    Connected to https://reana.cern.ch - Server is running.
-
-We proceed to create a new workflow instance:
-
-.. code-block:: console
-
-    $ reana-client create
-    workflow.1
-    $ export REANA_WORKON=workflow.1
-
-We can now start the workflow execution:
-
-.. code-block:: console
-
+    $ export REANA_ACCESS_TOKEN=XXXXXXX
+    $ # create new workflow
+    $ reana-client create -n my-analysis
+    $ export REANA_WORKON=my-analysis
+    $ # upload input code and data to the workspace
+    $ reana-client upload ./code ./data
+    $ # start computational workflow
     $ reana-client start
-    workflow.1 has been started.
-
-After several minutes the workflow should be successfully finished. Let us query
-its status:
-
-.. code-block:: console
-
+    $ # ... should be finished in about a minute
     $ reana-client status
-    NAME       RUN_NUMBER   CREATED               STATUS     PROGRESS
-    workflow   1            2018-08-07T07:33:18   finished   2/2
-
-We can list the output files:
-
-.. code-block:: console
-
-    $ reana-client list | grep -E '(NAME|fitresults)'
-    NAME                                                SIZE    LAST-MODIFIED
-    statanalysis/fitresults/limit_data_nomsignal.json   176     2018-08-07 07:35:24.026320+00:00
-    statanalysis/fitresults/limit_data.json             174     2018-08-07 07:35:23.853874+00:00
-    statanalysis/fitresults/limit.png                   17053   2018-08-07 07:35:23.846938+00:00
-    statanalysis/fitresults/post.png                    10120   2018-08-07 07:35:21.914145+00:00
-    statanalysis/fitresults/pre.png                     10142   2018-08-07 07:35:21.749101+00:00
-
-We finish by downloading generated limit plot:
-
-.. code-block:: console
-
+    $ # list workspace files
+    $ reana-client list
+    $ # download output results
     $ reana-client download statanalysis/fitresults/limit.png
-    File statanalysis/fitresults/limit.png downloaded to /home/reana/reanahub/reana-demo-atlas-recast.
+
+Please see the `REANA-Client <https://reana-client.readthedocs.io/>`_
+documentation for more detailed explanation of typical ``reana-client`` usage
+scenarios.
 
 Contributors
 ============
 
 The list of contributors in alphabetical order:
 
-- `Diego Rodriguez <https://orcid.org/0000-0003-0649-2002>`_ <diego.rodriguez@cern.ch>
-- `Lukas Heinrich <https://orcid.org/0000-0002-4048-7584>`_ <lukas.heinrich@gmail.com>
-- `Tibor Simko <https://orcid.org/0000-0001-7202-5803>`_ <tibor.simko@cern.ch>
+- `Diego Rodriguez <https://orcid.org/0000-0003-0649-2002>`_
+- `Lukas Heinrich <https://orcid.org/0000-0002-4048-7584>`_
+- `Rokas Maciulaitis <https://orcid.org/0000-0003-1064-6967>`_
+- `Tibor Simko <https://orcid.org/0000-0001-7202-5803>`_

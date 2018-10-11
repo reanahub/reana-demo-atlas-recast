@@ -1,17 +1,12 @@
-version: 0.2.0
+version: 0.3.0
 inputs:
   parameters:
     did: 404958
     xsec_in_pb: 0.00122
     dxaod_file: http://physics.nyu.edu/~lh1132/capdemo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
-outputs:
-  files:
-    - outputs/statanalysis/fitresults/pre.png
-environments:
-  - type: docker
-    image: reanahub/reana-demo-atlas-recast-eventselection
-  - type: docker
-    image: reanahub/reana-demo-atlas-recast-statanalysis
 workflow:
   type: yadage
   file: workflow/workflow.yml
+outputs:
+  files:
+    - outputs/statanalysis/fitresults/pre.png
