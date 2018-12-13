@@ -127,44 +127,17 @@ place of ``reanahub``.)
 --------------------
 
 This analysis example consists of a simple workflow where event selection is run
-first and its output serve as an input for the statistical analysis. results.
+first and its output serve as an input for the statistical analysis.
 
 We shall use the `Yadage <https://github.com/yadage>`_ workflow engine to
-express the computational steps in a declarative manner. The `workflow.yml
-<workflow/workflow.yml>`_ workflow defines the full pipeline.
+express the computational steps in a declarative manner:
 
-.. code-block:: text
+.. figure:: https://raw.githubusercontent.com/reanahub/reana-demo-atlas-recast/master/docs/workflow.png
+   :alt: workflow.png
+   :align: center
 
-         inputs
-           |
-           |
-           V
-   +-----------------+
-   | Event selection |
-   +-----------------+
-           |
-           |  submitDir/input/sample.root
-           |  submitDir/hist-sample.root
-           |  submitDirhist/sample.root
-           |  submitDir/driver.root
-           |
-           V
-   +----------------------+
-   | Statistical analysis |
-   +----------------------+
-           |
-           |  fitresults/pre.png
-           |  fitresults/limit.png
-           |  fitresults/limit_data.json
-           |  fitresults/post.png
-           |  fitresults/limit_data_nomsignal.json
-           |
-           V
-         outputs
-
-Please see the `workflow.yml <workflow/workflow.yml>`_ workflow definition with
-individual stages being defined in `steps.yml <workflow/steps.yml>`_ and refer
-to `Yadage documentation <http://yadage.readthedocs.io/>`_.
+The full analysis pipeline is defined in `workflow.yml <workflow/workflow.yml>`_
+and the individual steps are defined in `steps.yml <workflow/steps.yml>`_.
 
 5. Output results
 -----------------
