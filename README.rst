@@ -154,8 +154,8 @@ The analysis produces several pre-fit and post-fit plots:
 
 The limit plot:
 
-.. figure:: https://raw.githubusercontent.com/reanahub/reana-demo-atlas-recast/master/statanalysis/example_results/plot_limit.png
-   :alt: plot_limit.png
+.. figure:: https://raw.githubusercontent.com/reanahub/reana-demo-atlas-recast/master/statanalysis/example_results/limit.png
+   :alt: limit.png
    :align: center
 
 The limit data is also stored in JSON format for both an entire µ-scan as well
@@ -175,7 +175,7 @@ workflow steps and expected outputs:
       parameters:
         did: 404958
         xsec_in_pb: 0.00122
-        dxaod_file: http://physics.nyu.edu/~lh1132/capdemo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
+        dxaod_file: https://recastwww.web.cern.ch/recastwww/data/reana-recast-demo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
     workflow:
       type: yadage
       file: workflow/workflow.yml
