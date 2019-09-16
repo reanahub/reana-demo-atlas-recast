@@ -6,3 +6,5 @@ RUN source ~/release_setup.sh &&  \
     cmake ../src && \
     make -j4
 USER root
+RUN sudo usermod -G root atlas
+USER atlas
