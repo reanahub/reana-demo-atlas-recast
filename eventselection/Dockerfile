@@ -1,4 +1,4 @@
-FROM atlas/analysisbase:latest
+FROM atlas/analysisbase:21.2.51
 ADD . /analysis/src
 WORKDIR /analysis/build
 RUN source ~/release_setup.sh &&  \
