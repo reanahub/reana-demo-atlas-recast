@@ -20,6 +20,8 @@ eventselection:
   environment:
     environment_type: 'docker-encapsulated'
     image: reanahub/reana-demo-atlas-recast-eventselection
+    resources:
+      - kubernetes_uid: 500
 
 statanalysis:
   process:
@@ -44,3 +46,5 @@ statanalysis:
   environment:
     environment_type: 'docker-encapsulated'
     image: reanahub/reana-demo-atlas-recast-statanalysis
+    resources:
+      - kubernetes_uid: 500
