@@ -4,9 +4,11 @@ inputs:
     did: 404958
     xsec_in_pb: 0.00122
     dxaod_file: https://recastwww.web.cern.ch/recastwww/data/reana-recast-demo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
+  directories:
+    - workflow
 workflow:
   type: yadage
   file: workflow/workflow.yml
 outputs:
   files:
-    - outputs/statanalysis/fitresults/pre.png
+    - statanalysis/fitresults/limit.png
