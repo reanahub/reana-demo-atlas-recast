@@ -1,0 +1,37 @@
+# Note that if you are working on the analysis development locally, i.e. outside
+# of the REANA platform, you can proceed as follows:
+#
+#   $ virtualenv ~/.virtualenvs/yadage
+#   $ source ~/.virtualenvs/yadage/bin/activate
+#   $ pip install yadage
+#   $ yadage-run _run workflow/workflow.yml ./workflow/test_inputs/inp1.yml
+#   $ ls -l _run/statanalysis/fitresults/*.png
+#   -rw-r--r-- 1 root root 17053 Jun 17 15:16 _run/statanalysis/fitresults/limit.png
+#   -rw-r--r-- 1 root root 10120 Jun 17 15:16 _run/statanalysis/fitresults/post.png
+#   -rw-r--r-- 1 root root 10142 Jun 17 15:16 _run/statanalysis/fitresults/pre.png
+#   $ ls -l _run/statanalysis/fitresults/limit_data.json
+#   -rw-r--r-- 1 root root 174 Jun 17 15:16 _run/statanalysis/fitresults/limit_data.json
+
+stages:
+  - name: eventselection
+    dependencies: [init]
+    scheduler:
+      scheduler_type: singlestep-stage
+      parameters:
+        name: recast_sample
+        did: {step: init, output: did}
+        xsec_in_pb: {step: init, output: xsec_in_pb}
+        dxaod_file: {step: init, output: dxaod_file}
+        lumi_in_ifb: 30.0
+        submitDir: '{workdir}/submitDir'
+      step: {$ref: 'workflow/steps-htcondorcern.yml#/eventselection'}
+  - name: statanalysis
+    dependencies: [eventselection]
+    scheduler:
+      scheduler_type: singlestep-stage
+      parameters:
+        data_file: /code/data/data.root
+        signal_file: {step: eventselection, output: histfile}
+        background_file: /code/data/background.root
+        resultdir: '{workdir}/fitresults'
+      step: {$ref: 'workflow/steps-htcondorcern.yml#/statanalysis'}
