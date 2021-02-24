@@ -24,6 +24,7 @@ eventselection:
     resources:
       - kubernetes_uid: 500
       - compute_backend: htcondorcern
+      - htcondor_max_runtime: espresso
 
 statanalysis:
   process:
@@ -52,3 +53,4 @@ statanalysis:
     resources:
       - kubernetes_uid: 500
       - compute_backend: htcondorcern
+      - htcondor_max_runtime: espresso
