@@ -23,8 +23,8 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install reana-client
+          pip install reana-client --pre
 
       - name: Validate workflow specification file
         run: |
-          reana-client validate | grep -q ' is a valid '
+          reana-client validate
