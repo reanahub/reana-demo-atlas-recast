@@ -1,0 +1,45 @@
+version: 0.6.0
+inputs:
+  parameters:
+    name: recast_sample
+    did: 404958
+    xsec_in_pb: 0.00122
+    lumi_in_ifb: 30.0
+    resultdir: 'statanalysis/fitresults'
+    data_file: /code/data/data.root
+    signal_file: 'eventselection/submitDir/hist-sample.root'
+    background_file: /code/data/background.root
+    dxaod_file: https://recastwww.web.cern.ch/recastwww/data/reana-recast-demo/mc15_13TeV.123456.cap_recast_demo_signal_one.root
+workflow:
+  type: serial
+  specification:
+    steps:
+      - name: eventselection
+        environment: reanahub/reana-demo-atlas-recast-eventselection:1.0
+        kubernetes_memory_limit: '64Mi'
+        kubernetes_uid: 500
+        commands:
+          - >
+            source /home/atlas/release_setup.sh
+            && source /analysis/build/x86*/setup.sh
+            && printf "id/I:name/C:xsec/F:kfac/F:eff/F:relunc/F\n${did} ${name} ${xsec_in_pb} 1.0 1.0 1.0" > recast_xsecs.txt
+            && echo ${dxaod_file} > recast_inputs.txt
+            && mkdir -p eventselection
+            && myEventSelection eventselection/submitDir recast_inputs.txt recast_xsecs.txt ${lumi_in_ifb}
+
+      - name: statanalysis
+        environment: reanahub/reana-demo-atlas-recast-statanalysis:1.0
+        kubernetes_memory_limit: '64Mi'
+        kubernetes_uid: 500
+        commands:
+          - >
+            source /home/atlas/release_setup.sh
+            && python /code/make_ws.py ${data_file} ${signal_file} ${background_file}
+            && mkdir -p ${resultdir}
+            && python /code/plot.py results/meas_combined_meas_model.root ${resultdir}/pre.png ${resultdir}/post.png
+            && python /code/set_limit.py results/meas_combined_meas_model.root \
+                   ${resultdir}/limit.png ${resultdir}/limit_data.json \
+                   ${resultdir}/limit_data_nomsignal.json
+outputs:
+  files:
+    - statanalysis/fitresults/limit.png
