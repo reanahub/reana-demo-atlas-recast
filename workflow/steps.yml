@@ -22,7 +22,7 @@ eventselection:
     image: reanahub/reana-demo-atlas-recast-eventselection
     imagetag: '1.0'
     resources:
-      - kubernetes_memory_limit: '64Mi'
+      - kubernetes_memory_limit: '256Mi'
       - kubernetes_uid: 500
 
 statanalysis:
@@ -50,5 +50,5 @@ statanalysis:
     image: reanahub/reana-demo-atlas-recast-statanalysis
     imagetag: '1.0'
     resources:
-      - kubernetes_memory_limit: '64Mi'
+      - kubernetes_memory_limit: '256Mi'
       - kubernetes_uid: 500
