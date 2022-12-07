@@ -189,7 +189,7 @@ workflow steps and expected outputs:
 
 .. code-block:: yaml
 
-    version: 0.3.0
+    version: 0.9.0
     inputs:
       parameters:
         did: 404958
