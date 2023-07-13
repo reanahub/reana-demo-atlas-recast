@@ -19,7 +19,7 @@ eventselection:
       histfile: '{submitDir}/hist-sample.root'
   environment:
     environment_type: 'docker-encapsulated'
-    image: reanahub/reana-demo-atlas-recast-eventselection
+    image: docker.io/reanahub/reana-demo-atlas-recast-eventselection
     imagetag: '1.0'
     resources:
       - kubernetes_uid: 500
@@ -48,7 +48,7 @@ statanalysis:
       nomsig: '{resultdir}/limit_data_nomsignal.json'
   environment:
     environment_type: 'docker-encapsulated'
-    image: reanahub/reana-demo-atlas-recast-statanalysis
+    image: docker.io/reanahub/reana-demo-atlas-recast-statanalysis
     imagetag: '1.0'
     resources:
       - kubernetes_uid: 500

@@ -15,7 +15,7 @@ workflow:
   specification:
     steps:
       - name: eventselection
-        environment: reanahub/reana-demo-atlas-recast-eventselection:1.0
+        environment: docker.io/reanahub/reana-demo-atlas-recast-eventselection:1.0
         kubernetes_memory_limit: '256Mi'
         kubernetes_uid: 500
         commands:
@@ -28,7 +28,7 @@ workflow:
             && myEventSelection eventselection/submitDir recast_inputs.txt recast_xsecs.txt ${lumi_in_ifb}
 
       - name: statanalysis
-        environment: reanahub/reana-demo-atlas-recast-statanalysis:1.0
+        environment: docker.io/reanahub/reana-demo-atlas-recast-statanalysis:1.0
         kubernetes_memory_limit: '256Mi'
         kubernetes_uid: 500
         commands:

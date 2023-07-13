@@ -82,21 +82,26 @@ on top of which we add and build our custom code:
 .. code-block:: console
 
    $ less eventselection/Dockerfile
-   FROM atlas/analysisbase:latest
+   FROM docker.io/atlas/analysisbase:21.2.51
    ADD . /analysis/src
    WORKDIR /analysis/build
    RUN source ~/release_setup.sh &&  \
        sudo chown -R atlas /analysis && \
+       sudo chmod -R 775 /analysis && \
+       sudo chmod -R 755 /home/atlas && \
        cmake ../src && \
        make -j4
+   USER root
+   RUN sudo usermod -G root atlas
+   USER atlas
 
 We can build our event selection analysis environment image and give it a name
-``reanahub/reana-demo-atlas-recast-eventselection``:
+``docker.io/reanahub/reana-demo-atlas-recast-eventselection``:
 
 .. code-block:: console
 
    $ cd eventselection
-   $ docker build -t reanahub/reana-demo-atlas-recast-eventselection .
+   $ docker build -t docker.io/reanahub/reana-demo-atlas-recast-eventselection .
 
 The statistical analysis stage also extends ``atlas/analysisbase`` by the custom
 code:
@@ -104,24 +109,27 @@ code:
 .. code-block:: console
 
    $ less statanalysis/Dockerfile
-   FROM atlas/analysisbase
+   FROM docker.io/atlas/analysisbase:21.2.51
    ADD . /code
-   RUN sudo sh -c "source /home/atlas/release_setup.sh && pip install hftools"
+   RUN sudo sh -c "source /home/atlas/release_setup.sh && pip install hftools==0.0.6"
+   USER root
+   RUN sudo usermod -G root atlas && sudo chmod -R 755 /home/atlas && chmod -R 775 /code
+   USER atlas
 
 We can build our statistical analysis environment image and give it a name
-``reanahub/reana-demo-atlas-recast-statanalysis``:
+``docker.io/reanahub/reana-demo-atlas-recast-statanalysis``:
 
 .. code-block:: console
 
    $ cd statanalysis
-   $ docker build -t reanahub/reana-demo-atlas-recast-statanalysis .
+   $ docker build -t docker.io/reanahub/reana-demo-atlas-recast-statanalysis .
 
 We can upload both images to the DockerHub image registry:
 
 .. code-block:: console
 
-   $ docker push reanahub/reana-demo-atlas-recast-eventselection
-   $ docker push reanahub/reana-demo-atlas-recast-statanalysis
+   $ docker push docker.io/reanahub/reana-demo-atlas-recast-eventselection
+   $ docker push docker.io/reanahub/reana-demo-atlas-recast-statanalysis
 
 (Note that typically you would use your own username such as ``johndoe`` in
 place of ``reanahub``.)

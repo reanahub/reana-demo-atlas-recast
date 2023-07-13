@@ -1,4 +1,4 @@
-FROM atlas/analysisbase:21.2.51
+FROM docker.io/atlas/analysisbase:21.2.51
 ADD . /analysis/src
 WORKDIR /analysis/build
 RUN source ~/release_setup.sh &&  \
