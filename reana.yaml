@@ -12,3 +12,8 @@ workflow:
 outputs:
   files:
     - statanalysis/fitresults/limit.png
+tests:
+  files:
+    - tests/log-messages.feature
+    - tests/run-duration.feature
+    - tests/workspace-files.feature
