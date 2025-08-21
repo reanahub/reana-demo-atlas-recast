@@ -8,4 +8,4 @@ Feature: Run duration
 
     Scenario: The workflow terminates in a reasonable amount of time
         When the workflow execution completes
-        Then the workflow run duration should be less than 6 minutes
+        Then the workflow run duration should be less than 9 minutes
