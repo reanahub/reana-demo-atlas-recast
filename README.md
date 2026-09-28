@@ -136,7 +136,9 @@ and the individual steps are defined in [steps.yml](workflow/steps.yml).
 Alternatively, the same two steps are also expressed using the
 [Snakemake](https://snakemake.github.io/) workflow engine in
 [workflow/snakemake/Snakefile](workflow/snakemake/Snakefile), see
-[reana-snakemake.yaml](reana-snakemake.yaml).
+[reana-snakemake.yaml](reana-snakemake.yaml). A variant that dispatches both
+steps to the HTCondor@CERN compute backend instead of Kubernetes is available
+via [reana-snakemake-htcondorcern.yaml](reana-snakemake-htcondorcern.yaml).
 
 ### 5. Output results
 
@@ -228,3 +230,7 @@ $ export REANA_WORKON=myanalysis
 $ reana-client upload
 $ reana-client start
 ```
+
+To run the same Snakemake workflow on the HTCondor@CERN compute backend
+instead, use [reana-snakemake-htcondorcern.yaml](reana-snakemake-htcondorcern.yaml)
+in place of `reana-snakemake.yaml` above.

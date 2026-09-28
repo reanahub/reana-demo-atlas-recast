@@ -18,6 +18,22 @@
 # usual pre-creation of output directories is not reliable, so every rule
 # below creates its own output directory as the first thing it does.
 
+# By default jobs run on the Kubernetes compute backend. Passing
+# compute_backend=htcondorcern (e.g. via workflow/snakemake/inputs-htcondorcern.yaml)
+# switches both rules to HTCondor@CERN instead, mirroring
+# workflow/steps-htcondorcern.yml from the Yadage version of this workflow.
+COMPUTE_BACKEND = config.get("compute_backend", "kubernetes")
+if COMPUTE_BACKEND == "htcondorcern":
+    JOB_RESOURCES = dict(
+        compute_backend="htcondorcern",
+        htcondor_max_runtime=config.get("htcondor_max_runtime", "espresso"),
+        htcondor_requirements=config.get(
+            "htcondor_requirements", '(TARGET.Arch =?= "X86_64")'
+        ),
+    )
+else:
+    JOB_RESOURCES = dict(kubernetes_memory_limit="256Mi")
+
 
 rule all:
     input:
@@ -40,7 +56,7 @@ rule eventselection:
     container:
         "docker://docker.io/reanahub/reana-demo-atlas-recast-eventselection:1.0"
     resources:
-        kubernetes_memory_limit="256Mi",
+        **JOB_RESOURCES
     shell:
         """
         source /home/atlas/release_setup.sh
@@ -75,7 +91,7 @@ rule statanalysis:
     container:
         "docker://docker.io/reanahub/reana-demo-atlas-recast-statanalysis:1.0"
     resources:
-        kubernetes_memory_limit="256Mi",
+        **JOB_RESOURCES
     shell:
         """
         source /home/atlas/release_setup.sh
