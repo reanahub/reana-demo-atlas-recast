@@ -1,0 +1,88 @@
+# Note that if you are working on the analysis development locally, i.e. outside
+# of the REANA platform, you can proceed as follows:
+#
+#   $ virtualenv ~/.virtualenvs/snakemake
+#   $ source ~/.virtualenvs/snakemake/bin/activate
+#   $ pip install snakemake
+#   $ snakemake -s workflow/snakemake/Snakefile \
+#         --configfile workflow/snakemake/inputs.yaml \
+#         -p --cores 1
+#   $ ls -l statanalysis/fitresults/*.png
+#   -rw-r--r-- 1 root root 17053 Jun 17 15:16 statanalysis/fitresults/limit.png
+#   -rw-r--r-- 1 root root 10120 Jun 17 15:16 statanalysis/fitresults/post.png
+#   -rw-r--r-- 1 root root 10142 Jun 17 15:16 statanalysis/fitresults/pre.png
+#   $ ls -l statanalysis/fitresults/limit_data.json
+#   -rw-r--r-- 1 root root 174 Jun 17 15:16 statanalysis/fitresults/limit_data.json
+#
+# Note: on REANA, each rule runs in its own container/job and Snakemake's
+# usual pre-creation of output directories is not reliable, so every rule
+# below creates its own output directory as the first thing it does.
+
+
+rule all:
+    input:
+        "statanalysis/fitresults/pre.png",
+        "statanalysis/fitresults/post.png",
+        "statanalysis/fitresults/limit.png",
+        "statanalysis/fitresults/limit_data.json",
+        "statanalysis/fitresults/limit_data_nomsignal.json",
+
+
+rule eventselection:
+    output:
+        histfile="eventselection/submitDir/hist-sample.root",
+    params:
+        did=config["did"],
+        xsec_in_pb=config["xsec_in_pb"],
+        dxaod_file=config["dxaod_file"],
+        lumi_in_ifb=30.0,
+        submitdir="eventselection/submitDir",
+    container:
+        "docker://docker.io/reanahub/reana-demo-atlas-recast-eventselection:1.0"
+    resources:
+        kubernetes_memory_limit="256Mi",
+    shell:
+        """
+        source /home/atlas/release_setup.sh
+        source /analysis/build/x86*/setup.sh
+
+        echo 'id/I:name/C:xsec/F:kfac/F:eff/F:relunc/F' > recast_xsecs.txt
+        echo '{params.did} recast_sample {params.xsec_in_pb} 1.0 1.0 1.0' >> recast_xsecs.txt
+
+        echo {params.dxaod_file} > recast_inputs.txt
+
+        # EventLoop creates the submit directory itself and refuses to run
+        # if it already exists, so we only make sure its parent is there.
+        mkdir -p $(dirname {params.submitdir})
+        rm -rf {params.submitdir}
+        myEventSelection {params.submitdir} recast_inputs.txt recast_xsecs.txt {params.lumi_in_ifb}
+        """
+
+
+rule statanalysis:
+    input:
+        signal_file=rules.eventselection.output.histfile,
+    output:
+        pre="statanalysis/fitresults/pre.png",
+        post="statanalysis/fitresults/post.png",
+        limit="statanalysis/fitresults/limit.png",
+        limit_data="statanalysis/fitresults/limit_data.json",
+        nomsig="statanalysis/fitresults/limit_data_nomsignal.json",
+    params:
+        data_file="/code/data/data.root",
+        background_file="/code/data/background.root",
+        resultdir="statanalysis/fitresults",
+    container:
+        "docker://docker.io/reanahub/reana-demo-atlas-recast-statanalysis:1.0"
+    resources:
+        kubernetes_memory_limit="256Mi",
+    shell:
+        """
+        source /home/atlas/release_setup.sh
+
+        mkdir -p {params.resultdir}
+        python /code/make_ws.py {params.data_file} {input.signal_file} {params.background_file}
+        python /code/plot.py results/meas_combined_meas_model.root {output.pre} {output.post}
+        python /code/set_limit.py results/meas_combined_meas_model.root \
+               {output.limit} {output.limit_data} {output.nomsig}
+        """

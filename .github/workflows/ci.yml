@@ -29,6 +29,10 @@ jobs:
         run: |
           reana-client validate
 
+      - name: Validate Snakemake workflow specification file
+        run: |
+          reana-client validate -f reana-snakemake.yaml
+
   format-prettier:
     runs-on: ubuntu-24.04
     steps:

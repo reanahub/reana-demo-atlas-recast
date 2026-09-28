@@ -133,6 +133,11 @@ the computational steps in a declarative manner:
 The full analysis pipeline is defined in [workflow.yml](workflow/workflow.yml)
 and the individual steps are defined in [steps.yml](workflow/steps.yml).
 
+Alternatively, the same two steps are also expressed using the
+[Snakemake](https://snakemake.github.io/) workflow engine in
+[workflow/snakemake/Snakefile](workflow/snakemake/Snakefile), see
+[reana-snakemake.yaml](reana-snakemake.yaml).
+
 ### 5. Output results
 
 The analysis produces several pre-fit and post-fit plots:
@@ -213,3 +218,13 @@ $ reana-client download
 Please see the [REANA-Client](https://reana-client.readthedocs.io/)
 documentation for more detailed explanation of typical `reana-client` usage
 scenarios.
+
+If you would like to run the Snakemake version of the workflow instead, simply
+pass the alternative specification file to the REANA commands:
+
+```console
+$ reana-client create -n myanalysis -f reana-snakemake.yaml
+$ export REANA_WORKON=myanalysis
+$ reana-client upload
+$ reana-client start
+```
