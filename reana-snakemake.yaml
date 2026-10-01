@@ -1,0 +1,17 @@
+version: 0.8.0
+inputs:
+  directories:
+    - workflow/snakemake
+  parameters:
+    input: workflow/snakemake/inputs.yaml
+workflow:
+  type: snakemake
+  file: workflow/snakemake/Snakefile
+outputs:
+  files:
+    - statanalysis/fitresults/limit.png
+tests:
+  files:
+    - tests/snakemake/log-messages.feature
+    - tests/snakemake/run-duration.feature
+    - tests/snakemake/workspace-files.feature
